@@ -7,9 +7,9 @@ namespace TaskManagementAPI.Models.Entities
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
 
-        
+
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         public List<UserTask> Tasks { get; set; } = new();
     }
