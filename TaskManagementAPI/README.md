@@ -45,6 +45,10 @@ dotnet ef database update
 ```bash
 dotnet run
 ```
+The POSTMAN DOCUMENT
+
+https://documenter.getpostman.com/view/33708307/2sAYkBuNLL
+
 
 The API will be available at:
 ```
@@ -78,7 +82,7 @@ Content-Type: application/json
 
 ### ✅ Update a Task
 ```http
-PUT /api/usertasks/{id}
+PATCH /api/usertasks/{id}
 Content-Type: application/json
 
 {

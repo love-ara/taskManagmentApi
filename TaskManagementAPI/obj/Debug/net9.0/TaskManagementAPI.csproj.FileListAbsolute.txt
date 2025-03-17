@@ -148,6 +148,7 @@ C:\Users\DELL\Documents\CSharp\TaskManagementAPI\TaskManagementAPI\obj\Debug\net
 C:\Users\DELL\Documents\CSharp\TaskManagementAPI\TaskManagementAPI\obj\Debug\net9.0\TaskManagementAPI.csproj.CoreCompileInputs.cache
 C:\Users\DELL\Documents\CSharp\TaskManagementAPI\TaskManagementAPI\obj\Debug\net9.0\TaskManagementAPI.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\DELL\Documents\CSharp\TaskManagementAPI\TaskManagementAPI\obj\Debug\net9.0\TaskManagementAPI.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\DELL\Documents\CSharp\TaskManagementAPI\TaskManagementAPI\obj\Debug\net9.0\TaskManagementAPI.sourcelink.json
 C:\Users\DELL\Documents\CSharp\TaskManagementAPI\TaskManagementAPI\obj\Debug\net9.0\scopedcss\bundle\TaskManagementAPI.styles.css
 C:\Users\DELL\Documents\CSharp\TaskManagementAPI\TaskManagementAPI\obj\Debug\net9.0\staticwebassets.build.json
 C:\Users\DELL\Documents\CSharp\TaskManagementAPI\TaskManagementAPI\obj\Debug\net9.0\staticwebassets.development.json
@@ -158,7 +159,6 @@ C:\Users\DELL\Documents\CSharp\TaskManagementAPI\TaskManagementAPI\obj\Debug\net
 C:\Users\DELL\Documents\CSharp\TaskManagementAPI\TaskManagementAPI\obj\Debug\net9.0\staticwebassets\msbuild.buildMultiTargeting.TaskManagementAPI.props
 C:\Users\DELL\Documents\CSharp\TaskManagementAPI\TaskManagementAPI\obj\Debug\net9.0\staticwebassets\msbuild.buildTransitive.TaskManagementAPI.props
 C:\Users\DELL\Documents\CSharp\TaskManagementAPI\TaskManagementAPI\obj\Debug\net9.0\staticwebassets.pack.json
-C:\Users\DELL\Documents\CSharp\TaskManagementAPI\TaskManagementAPI\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 C:\Users\DELL\Documents\CSharp\TaskManagementAPI\TaskManagementAPI\obj\Debug\net9.0\TaskMana.0D8D9FF3.Up2Date
 C:\Users\DELL\Documents\CSharp\TaskManagementAPI\TaskManagementAPI\obj\Debug\net9.0\TaskManagementAPI.dll
 C:\Users\DELL\Documents\CSharp\TaskManagementAPI\TaskManagementAPI\obj\Debug\net9.0\refint\TaskManagementAPI.dll

@@ -22,7 +22,7 @@ namespace TaskManagementAPI.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ApiResponse<IEnumerable<UserTaskDto>>>> GetAllTasks()
+        public async Task<ActionResult<ApiResponse<IEnumerable<UserTaskDto>>>> GetUserAllTasks()
         {
             try
             {
@@ -37,11 +37,11 @@ namespace TaskManagementAPI.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("byId")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ApiResponse<UserTaskDto>>> GetTaskById(Guid id)
+        public async Task<ActionResult<ApiResponse<UserTaskDto>>> GetUserTaskById([FromQuery] Guid id)
         {
             try
             {
@@ -60,10 +60,10 @@ namespace TaskManagementAPI.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ApiResponse<UserTaskDto>>> CreateTask(CreateUserTaskRequest createRequest)
+        public async Task<ActionResult<ApiResponse<UserTaskDto>>> CreateUserTask(CreateUserTaskRequest createRequest)
         {
             try
             {
@@ -73,7 +73,7 @@ namespace TaskManagementAPI.Controllers
                 var createdTask = await _taskService.CreateUserTaskAsync(createRequest);
                 var response = ApiResponse<UserTaskDto>.SuccessResponse(createdTask, "Task created successfully");
 
-                return CreatedAtAction(nameof(GetTaskById), new { id = createdTask.Id }, response);
+                return CreatedAtAction(nameof(GetUserTaskById), new { id = createdTask.Id }, response);
             }
             catch (Exception ex)
             {
@@ -83,12 +83,12 @@ namespace TaskManagementAPI.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPatch]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ApiResponse<UserTaskDto>>> UpdateTask(Guid id, UpdateUserTaskRequest updateRequest)
+        public async Task<ActionResult<ApiResponse<UserTaskDto>>> UpdateUserTask([FromQuery] Guid id, UpdateUserTaskRequest updateRequest)
         {
             try
             {
@@ -109,11 +109,11 @@ namespace TaskManagementAPI.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ApiResponse<bool>>> DeleteTask(Guid id)
+        public async Task<ActionResult<ApiResponse<bool>>> DeleteUserTask([FromQuery] Guid id)
         {
             try
             {
@@ -134,7 +134,7 @@ namespace TaskManagementAPI.Controllers
         [HttpGet("priority/{priority}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ApiResponse<IEnumerable<UserTaskDto>>>> GetTasksByPriority(Priority priority)
+        public async Task<ActionResult<ApiResponse<IEnumerable<UserTaskDto>>>> GetUserTasksByPriority( Priority priority)
         {
             try
             {
