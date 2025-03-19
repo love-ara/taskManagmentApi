@@ -5,7 +5,7 @@ namespace TaskManagementAPI.Services.Interfaces
 {
     public interface IUserTasksService
     {
-        Task<IEnumerable<UserTaskDto>> GetAllUserTasksAsync();
+        Task<IEnumerable<UserTaskDto>> GetAllUserTasksAsync(Guid userId);
         Task<UserTaskDto> GetUserTaskByIdAsync(Guid id);
         Task<UserTaskDto> CreateUserTaskAsync(CreateUserTaskRequest request);
         Task<UserTaskDto> UpdateUserTaskAsync(Guid id, UpdateUserTaskRequest request);

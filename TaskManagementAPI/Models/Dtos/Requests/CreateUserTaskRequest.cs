@@ -20,5 +20,7 @@ namespace TaskManagementAPI.Models.Dtos.Requests
         public Priority Priority { get; set; }
         public List<string> Tags { get; set; } = new();
 
+        public Guid AppUserId { get; set; }
+
     }
 }

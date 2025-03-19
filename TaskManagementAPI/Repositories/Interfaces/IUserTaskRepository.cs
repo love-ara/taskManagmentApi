@@ -4,7 +4,7 @@ namespace TaskManagementAPI.Repositories.Interfaces
 {
     public interface IUserTaskRepository
     {
-        Task<IEnumerable<UserTask>> GetAllUserTasksAsync();
+        Task<IEnumerable<UserTask>> GetAllUserTasksAsync(Guid userId);
         Task<UserTask> GetUserTaskByIdAsync(Guid id);
         Task<UserTask> CreateUserTaskAsync(UserTask task);
         Task<UserTask> UpdateUserTaskAsync(UserTask task);

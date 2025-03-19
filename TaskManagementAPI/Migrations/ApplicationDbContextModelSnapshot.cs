@@ -27,14 +27,55 @@ namespace TaskManagementAPI.Migrations
                     b.Property<Guid>("TagsId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("TasksId")
+                    b.Property<Guid>("UserTasksId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("TagsId", "TasksId");
+                    b.HasKey("TagsId", "UserTasksId");
 
-                    b.HasIndex("TasksId");
+                    b.HasIndex("UserTasksId");
 
-                    b.ToTable("TagUserTask");
+                    b.ToTable("UserTaskTags", (string)null);
+                });
+
+            modelBuilder.Entity("TaskManagementAPI.Models.Entities.AppUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Username")
+                        .IsUnique();
+
+                    b.ToTable("AppUsers");
                 });
 
             modelBuilder.Entity("TaskManagementAPI.Models.Entities.Tag", b =>
@@ -56,6 +97,9 @@ namespace TaskManagementAPI.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AppUserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
@@ -86,6 +130,8 @@ namespace TaskManagementAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AppUserId");
+
                     b.ToTable("UserTasks");
                 });
 
@@ -99,9 +145,25 @@ namespace TaskManagementAPI.Migrations
 
                     b.HasOne("TaskManagementAPI.Models.Entities.UserTask", null)
                         .WithMany()
-                        .HasForeignKey("TasksId")
+                        .HasForeignKey("UserTasksId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("TaskManagementAPI.Models.Entities.UserTask", b =>
+                {
+                    b.HasOne("TaskManagementAPI.Models.Entities.AppUser", "AppUser")
+                        .WithMany("UserTasks")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("TaskManagementAPI.Models.Entities.AppUser", b =>
+                {
+                    b.Navigation("UserTasks");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using TaskManagementAPI.Models.Dtos.Requests;
+﻿using TaskManagementAPI.Models.Dtos.Requests;
 using TaskManagementAPI.Models.Entities;
 using TaskManagementAPI.Repositories.Interfaces;
 using TaskManagementAPI.Services.Interfaces;
@@ -18,16 +17,20 @@ namespace TaskManagementAPI.Services.Implementations
 
         }
 
-        public async Task<IEnumerable<UserTaskDto>> GetAllUserTasksAsync()
+        public async Task<IEnumerable<UserTaskDto>> GetAllUserTasksAsync(Guid userId)
         {
-            var tasks = await _taskRepository.GetAllUserTasksAsync();
-            return tasks.Select(MapToDto);
+            var userTasks = await _taskRepository.GetAllUserTasksAsync(userId);
+            if (userTasks == null)
+            {
+                throw new Exception("No Tasks found");
+            }
+                return userTasks.Select(task => MapToDto(task));
         }
 
         public async Task<UserTaskDto> GetUserTaskByIdAsync(Guid id)
         {
             var task = await _taskRepository.GetUserTaskByIdAsync(id);
-            return task != null ? MapToDto(task) : null;
+            return task != null ? MapToDto(task) : throw new Exception($"Task with id {id} not found");
         }
 
         public async Task<UserTaskDto> CreateUserTaskAsync(CreateUserTaskRequest taskDto)
@@ -40,7 +43,8 @@ namespace TaskManagementAPI.Services.Implementations
                 StartDate = taskDto.StartDate,
                 DueDate = taskDto.DueDate,
                 Priority = taskDto.Priority,
-                Tags = taskDto.Tags.Select(t => new Tag { Name = t }).ToList()
+                Tags = taskDto.Tags.Select(t => new Tag { Name = t }).ToList(),
+                AppUserId = taskDto.AppUserId
             };
 
             var createdTask = await _taskRepository.CreateUserTaskAsync(task);
@@ -51,8 +55,10 @@ namespace TaskManagementAPI.Services.Implementations
         {
             var existingTask = await _taskRepository.GetUserTaskByIdAsync(id);
             if (existingTask == null)
-                return null;
-
+            {
+                throw new Exception($"Task with id {id} not found.");
+            }
+        
             existingTask.Name = taskDto.Name;
             existingTask.Description = taskDto.Description;
             existingTask.IsComplete = taskDto.IsComplete;
@@ -61,6 +67,7 @@ namespace TaskManagementAPI.Services.Implementations
             existingTask.Priority = taskDto.Priority;
             existingTask.Tags = taskDto.Tags.Select(t => new Tag { Name = t }).ToList();
 
+            existingTask.UpdatedAt = DateTime.Now;
             var updatedTask = await _taskRepository.UpdateUserTaskAsync(existingTask);
             return MapToDto(updatedTask);
         }
@@ -80,7 +87,7 @@ namespace TaskManagementAPI.Services.Implementations
         {
             return new UserTaskDto
             {
-                Id = task.Id,
+                UserTaskId = task.Id,
                 Name = task.Name,
                 Description = task.Description,
                 IsComplete = task.IsComplete,
@@ -89,7 +96,8 @@ namespace TaskManagementAPI.Services.Implementations
                 Priority = task.Priority,
                 CreatedAt = task.CreatedAt,
                 UpdatedAt = task.UpdatedAt,
-                Tags = task.Tags.Select(t => t.Name).ToList()
+                Tags = task.Tags.Select(t => t.Name).ToList(),
+                AppUserId = task.AppUserId
             };
         }
     }

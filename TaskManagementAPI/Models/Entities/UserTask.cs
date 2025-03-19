@@ -23,7 +23,13 @@ namespace TaskManagementAPI.Models.Entities
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-        public List<Tag> Tags { get; set; } = new();
+        public Guid AppUserId { get; set; }
+
+        [ForeignKey("AppUserId")]
+        public virtual AppUser AppUser { get; set; }
+
+        public virtual ICollection<Tag> Tags { get; set; } = new List<Tag>();
+
 
         public UserTask()
         {

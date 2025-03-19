@@ -14,7 +14,7 @@ namespace TaskManagementAPI.Repositories.Implementations
             _context = context;
         }
 
-        public async Task<IEnumerable<UserTask>> GetAllUserTasksAsync()
+        public async Task<IEnumerable<UserTask>> GetAllUserTasksAsync(Guid userId)
         {
             return await _context.UserTasks
                 .Include(t => t.Tags)
@@ -53,12 +53,12 @@ namespace TaskManagementAPI.Repositories.Implementations
             return task;
         }
 
-        public async Task<UserTask> UpdateUserTaskAsync(UserTask task)
+        public async Task<UserTask> UpdateUserTaskAsync(UserTask userTask)
         {
             // Handle tags
             var tagsList = new List<Tag>();
 
-            foreach (var tag in task.Tags)
+            foreach (var tag in userTask.Tags)
             {
                 var existingTag = await _context.Tags.FirstOrDefaultAsync(t => t.Name == tag.Name);
                 if (existingTag != null)
@@ -71,21 +71,21 @@ namespace TaskManagementAPI.Repositories.Implementations
                 }
             }
 
-            task.Tags = tagsList;
-            task.UpdatedAt = DateTime.UtcNow;
+            userTask.Tags = tagsList;
+            userTask.UpdatedAt = DateTime.UtcNow;
 
-            _context.UserTasks.Update(task);
+            _context.UserTasks.Update(userTask);
             await _context.SaveChangesAsync();
-            return task;
+            return userTask;
         }
 
         public async Task<bool> DeleteUserTaskAsync(Guid id)
         {
-            var task = await _context.UserTasks.FindAsync(id);
-            if (task == null)
-                return false;
+            var userTask = await _context.UserTasks.FindAsync(id);
+            if (userTask == null)
+                throw new Exception($"No task with the id {id}");
 
-            _context.UserTasks.Remove(task);
+            _context.UserTasks.Remove(userTask);
             return await _context.SaveChangesAsync() > 0;
         }
 

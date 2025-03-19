@@ -165,3 +165,4 @@ C:\Users\DELL\Documents\CSharp\TaskManagementAPI\TaskManagementAPI\obj\Debug\net
 C:\Users\DELL\Documents\CSharp\TaskManagementAPI\TaskManagementAPI\obj\Debug\net9.0\TaskManagementAPI.pdb
 C:\Users\DELL\Documents\CSharp\TaskManagementAPI\TaskManagementAPI\obj\Debug\net9.0\TaskManagementAPI.genruntimeconfig.cache
 C:\Users\DELL\Documents\CSharp\TaskManagementAPI\TaskManagementAPI\obj\Debug\net9.0\ref\TaskManagementAPI.dll
+C:\Users\DELL\Documents\CSharp\TaskManagementAPI\TaskManagementAPI\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
