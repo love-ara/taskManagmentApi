@@ -16,39 +16,38 @@ namespace TaskManagementAPI.Services.Implementations
             _configuration = configuration;
         }
 
-        public AuthResponse GenerateToken(AppUser user)
+        public string GenerateJwtToken(Guid userId, string username, string email)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var jwtKey = _configuration["JWT:SecretKey"];
+            var issuer = _configuration["JWT:Issuer"];
+            var audience = _configuration["JWT:Audience"];
 
-            var claims = new List<Claim>
+            if (string.IsNullOrEmpty(jwtKey) || string.IsNullOrEmpty(issuer) || string.IsNullOrEmpty(audience))
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role),             
+                throw new ApplicationException("JWT configuration is missing or invalid");
+            }
 
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(jwtKey);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+            new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+            new Claim(ClaimTypes.Name, username),
+            new Claim(ClaimTypes.Email, email),
+            new Claim(ClaimTypes.Role, "User") 
+        }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                Issuer = issuer, 
+                Audience = audience, 
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
-            var expiration = DateTime.UtcNow.AddHours(2);
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["JWT:Issuer"],
-                audience: _configuration["JWT:Audience"],
-                claims: claims,
-                expires: expiration,
-                signingCredentials: credentials
-            );
-
-            return new AuthResponse
-            {
-                Token = new JwtSecurityTokenHandler().WriteToken(token),
-                ExpiresAt = expiration,
-                Username = user.Username,
-                Role = user.Role
-            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
-    
 
-}
+    }
 }

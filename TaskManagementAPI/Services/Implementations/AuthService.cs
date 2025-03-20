@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Data;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
-using Microsoft.IdentityModel.Tokens;
 using TaskManagementAPI.Models.Dtos.Requests;
 using TaskManagementAPI.Models.Dtos.Responses;
 using TaskManagementAPI.Models.Entities;
@@ -15,12 +11,13 @@ namespace TaskManagementAPI.Services.Implementations
     public class AuthService : IAuthService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IConfiguration _configuration;
+        private readonly JwtService _jwtService;
 
-        public AuthService(IUserRepository userRepository, IConfiguration configuration)
+
+        public AuthService(IUserRepository userRepository, JwtService jwtService)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _jwtService = jwtService ?? throw new ArgumentNullException(nameof(jwtService));
         }
 
         public async Task<AuthResponse> RegisterAsync(RegisterRequest registerRequest)
@@ -61,7 +58,7 @@ namespace TaskManagementAPI.Services.Implementations
                 var createdUser = await _userRepository.CreateUserAsync(user);
 
                 // Generate token
-                var token = GenerateJwtToken(createdUser.Id, createdUser.Username, createdUser.Email);
+                var token = _jwtService.GenerateJwtToken(createdUser.Id, createdUser.Username, createdUser.Email);
 
                 return new AuthResponse
                 {
@@ -94,7 +91,7 @@ namespace TaskManagementAPI.Services.Implementations
             }
 
             // Generate token
-            var token = GenerateJwtToken(user.Id, user.Username, user.Email);
+            var token = _jwtService.GenerateJwtToken(user.Id, user.Username, user.Email);
 
             return new AuthResponse
             {
@@ -107,33 +104,7 @@ namespace TaskManagementAPI.Services.Implementations
             };
         }
 
-        public string GenerateJwtToken(Guid userId, string username, string email)
-        {
-            var jwtKey = _configuration["JWT:SecretKey"];
-            if (string.IsNullOrEmpty(jwtKey))
-            {
-                throw new ApplicationException("JWT key is not configured");
-            }
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(jwtKey);
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-                    new Claim(ClaimTypes.Name, username),
-                    new Claim(ClaimTypes.Email, email)
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-        }
-
+       
         private String HashPassword(string password)
         {
             using var sha256 = System.Security.Cryptography.SHA256.Create();

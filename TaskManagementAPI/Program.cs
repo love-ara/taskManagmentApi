@@ -44,14 +44,31 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = jwtSettings["Issuer"],
-            ValidAudience = jwtSettings["Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]))
+            ValidIssuer = issuer,
+            ValidAudience = audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
         };
 
         options.Events = new JwtBearerEvents
         {
-            OnAuthenticationFailed = context =>
+            OnChallenge = async context =>
+            {
+                // Prevent default response
+                context.HandleResponse();
+
+                // Set status code and content type
+                context.Response.StatusCode = 401;
+                context.Response.ContentType = "application/json";
+
+                // Create standardized error response
+                var response = new
+                {
+                    StatusCode = 401,
+                    Message = "Invalid or expired token"
+                };
+                await context.Response.WriteAsJsonAsync(response);
+            },
+                OnAuthenticationFailed = context =>
             {
                 Console.WriteLine($"Authentication failed: {context.Exception.Message}");
                 return Task.CompletedTask;
@@ -114,8 +131,12 @@ app.UseExceptionHandler();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<StatusCodeMiddleware>();
+
 
 app.MapControllers();
+
+
 
 using (var scope = app.Services.CreateScope())
 {

@@ -7,7 +7,6 @@ namespace TaskManagementAPI.Services.Interfaces
     {
         Task<AuthResponse> RegisterAsync(RegisterRequest registerRequest);
         Task<AuthResponse> LoginAsync(LoginRequest loginRequest);
-        string GenerateJwtToken(Guid userId, string username, string email);
 
     }
 }

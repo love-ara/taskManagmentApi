@@ -23,7 +23,7 @@ namespace TaskManagementAPI.Middleware
 
             var errorResponse = new ErrorResponse
             {
-                Message = exception.Message
+                Message = exception.Message,
             };
 
             switch (exception)
