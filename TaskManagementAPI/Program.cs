@@ -64,7 +64,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 var response = new
                 {
                     StatusCode = 401,
-                    Message = "Invalid or expired token"
+                    Message = "Invalid or expired token. Please Login Again"
                 };
                 await context.Response.WriteAsJsonAsync(response);
             },
